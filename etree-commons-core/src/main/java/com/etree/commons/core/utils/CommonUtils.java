@@ -1,5 +1,5 @@
 /**
-* Copyright © 2020 Franklinton IT Pvt. Ltd.
+* Copyright © 2020 eTree Technologies Pvt. Ltd.
 *
 * @author  Franklin Joshua
 * @version 1.0
@@ -335,8 +335,8 @@ public class CommonUtils {
 		String errCode = null;
 		String errMsg = ex.getMessage();
 		if (ex instanceof EtreeCommonsException) {
-			EtreeCommonsException FranklintonCommonsException = (EtreeCommonsException) ex;
-			errCode = "" + FranklintonCommonsException.getErrorCode();
+			EtreeCommonsException etreeCommonsException = (EtreeCommonsException) ex;
+			errCode = "" + etreeCommonsException.getErrorCode();
 		}
 		return createErrors(errCode, errMsg);
 	}

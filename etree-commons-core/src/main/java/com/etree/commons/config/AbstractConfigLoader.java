@@ -1,5 +1,5 @@
 /**
-* Copyright (c) otclautomation.org
+* Copyright (c) elastictreetech.com
 *
 * @author  Franklin Joshua
 * @version 1.0
@@ -27,7 +27,7 @@ public abstract class AbstractConfigLoader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractConfigLoader.class);
 
-	private static final String FRANKLINTON_HOME_ENV_VAR = "FRANKLINTON_HOME";
+	private static final String ETREE_HOME_ENV_VAR = "ETREE_HOME";
 	
 	protected abstract String getDbmsDriver();
 	protected abstract String getDbms();
@@ -51,17 +51,17 @@ public abstract class AbstractConfigLoader {
 
 	public static Properties load(String serviceId) {
 		Map<String, String> sysEnv = System.getenv();
-		if (!sysEnv.containsKey(FRANKLINTON_HOME_ENV_VAR)) {
-			throw new EtreeCommonsException("","Oops... Cannot proceed - 'franklinton_home' not set! "
-					+ "Please set franklinton_home environment variable.");
+		if (!sysEnv.containsKey(ETREE_HOME_ENV_VAR)) {
+			throw new EtreeCommonsException("","Oops... Cannot proceed - 'etree_home' not set! "
+					+ "Please set etree_home environment variable.");
 		}
-		String franklintonHome = sysEnv.get(FRANKLINTON_HOME_ENV_VAR);
-		if (CommonUtils.isEmpty(franklintonHome)) {
-			throw new EtreeCommonsException("","Oops... Cannot proceed - 'franklinton_home' not set! "
-					+ "Please set franklinton_home environment variable.");
+		String etreeHome = sysEnv.get(ETREE_HOME_ENV_VAR);
+		if (CommonUtils.isEmpty(etreeHome)) {
+			throw new EtreeCommonsException("","Oops... Cannot proceed - 'etree_home' not set! "
+					+ "Please set etree_home environment variable.");
 		}
 		Properties configProps = new Properties();
-        try (InputStream inStream = new FileInputStream(franklintonHome + "/" + serviceId  + "/config"+ "/app.properties")) {
+        try (InputStream inStream = new FileInputStream(etreeHome + "/" + serviceId  + "/config"+ "/app.properties")) {
         	configProps.load(inStream);
         } catch (IOException ex) {
         	LOGGER.error(ex.getMessage());
