@@ -8,20 +8,20 @@ import org.apache.commons.lang.RandomStringUtils;
 import com.etree.commons.core.exception.EtreeCommonsException;
 
 
-public class TranscientUidUtil {
+public class TxIdUtil {
 
-	private static Map<String, TranscientUidDto> zonesConfig; 
+	private static Map<String, TxIdDto> zonesConfig; 
 	private static Map<String, Integer> zonesCounters; 
 	private static int defaultUidTokenFullLength = 10;
 	private static int defaultUidTokenSaltLength = 4;
 	private static int defaultMaxSalt = 1000;
 	
-	public static void registerZone(TranscientUidDto transcientUidDto) {
+	public static void registerZone(TxIdDto transcientUidDto) {
 		createOrResetZone(transcientUidDto, true);
 	}
 
 	public static void registerZone(String zoneName, int uidTokenFullLen, int uidTokenSaltLen, int maxSalt) {
-		TranscientUidDto transcientUidDto = new TranscientUidDto();
+		TxIdDto transcientUidDto = new TxIdDto();
 		transcientUidDto.setZoneName(zoneName);
 		transcientUidDto.setUidTokenFullLength(uidTokenFullLen);
 		transcientUidDto.setUidTokenSaltLength(uidTokenSaltLen);
@@ -36,11 +36,11 @@ public class TranscientUidUtil {
 		zonesConfig.remove(zoneName.toUpperCase());
 	}
 
-	public static void refreshZone(TranscientUidDto transcientUidDto) {
+	public static void refreshZone(TxIdDto transcientUidDto) {
 		createOrResetZone(transcientUidDto, false);
 	}
 	
-	private static void createOrResetZone(TranscientUidDto transcientUidDto, boolean isRegister) {
+	private static void createOrResetZone(TxIdDto transcientUidDto, boolean isRegister) {
 		if (transcientUidDto == null) {
 			throw new EtreeCommonsException("",  "Zone config cannot be null!");
 		}
@@ -72,7 +72,7 @@ public class TranscientUidUtil {
 		if (zonesConfig == null || !zonesConfig.containsKey(zoneName)) {
 			return null;
 		}
-		TranscientUidDto transcientUidDto = zonesConfig.get(zoneName);
+		TxIdDto transcientUidDto = zonesConfig.get(zoneName);
 		int uidTokenFullLength = transcientUidDto.getUidTokenFullLength();
 		if (uidTokenFullLength == 0) {
 			uidTokenFullLength = defaultUidTokenFullLength;
@@ -86,7 +86,7 @@ public class TranscientUidUtil {
 			maxSalt = defaultMaxSalt;
 		}
 		if (zonesCounters == null) {
-			synchronized (TranscientUidUtil.class) {
+			synchronized (TxIdUtil.class) {
 				if (zonesCounters == null) {
 					zonesCounters = new HashMap<>();
 				}
@@ -119,7 +119,7 @@ public class TranscientUidUtil {
 		return transactionIdentifier;
 	}
 
-	public static class TranscientUidDto {
+	public static class TxIdDto {
 		private String zoneName;
 		private int uidTokenFullLength;
 		private int uidTokenSaltLength;

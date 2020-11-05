@@ -1,11 +1,11 @@
 package com.etree.commons.core.utils;
 
-import com.etree.commons.core.dto.RequestWrapperDto;
+import com.etree.commons.core.dto.RequestDto;
 import com.etree.commons.core.web.dto.UserDetailsDto;
 
 public class RequestWrapperUtil {
 
-	public static String getResourceOnly(RequestWrapperDto requestWrapper) {
+	public static String getResourceOnly(RequestDto requestWrapper) {
 		return getResourceWithoutQueryString(requestWrapper.getResource());
 	}
 	
@@ -26,7 +26,7 @@ public class RequestWrapperUtil {
 		return resource;
 	}
 	
-	public static String getQueryString(RequestWrapperDto requestWrapper) {
+	public static String getQueryString(RequestDto requestWrapper) {
 		String resource = requestWrapper.getResource();
 		if (resource == null) {
 			return null;
@@ -43,7 +43,7 @@ public class RequestWrapperUtil {
 		return resource;
 	}
 	
-	public static String getUserId(RequestWrapperDto requestWrapper) {
+	public static String getUserId(RequestDto requestWrapper) {
 		UserDetailsDto userDetailsDto = requestWrapper.getUserDetails();
 		return getUserId(userDetailsDto);
 	}

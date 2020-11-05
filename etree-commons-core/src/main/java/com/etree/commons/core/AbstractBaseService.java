@@ -3,7 +3,7 @@
 *
 * @author  Franklin Joshua
 * @version 1.0
-* @since   2016-01-15 
+* @since   2020-11-04 
 */
 package com.etree.commons.core;
 
@@ -25,9 +25,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.etree.commons.core.CommonsSupportConstants.COLLECTION_TYPE;
-import com.etree.commons.core.dto.RequestWrapperDto;
+import com.etree.commons.core.dto.RequestDto;
 import com.etree.commons.core.exception.EtreeCommonsException;
-import com.etree.commons.core.utils.ExceptionUtils;
 
 
 public abstract class AbstractBaseService extends AbstractBase implements BaseService {
@@ -43,12 +42,12 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 		this.threadPoolExecutor = threadPoolExecutor;
 	}
 
-	protected <T> T  process(BaseService baseService, Object request, RequestWrapperDto requestWrapperDto) {
+	protected <T> T  process(BaseService baseService, Object request, RequestDto requestWrapperDto) {
 		requestWrapperDto.setRequest(request);
-		return baseService.process(requestWrapperDto);
+		return baseService.fetchData(requestWrapperDto);
 	}
 			
-	protected boolean isUserAuthorized(RequestWrapperDto requestWrapper) {
+	protected boolean isUserAuthorized(RequestDto requestWrapper) {
 		//TODO - remove / comment below if (true) ... block before deploying to prod 
 //		if (true) {
 //			return true;
@@ -73,7 +72,7 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 		return hasRole;
 	}
 	
-	protected String createFullyQualifiedService(RequestWrapperDto requestWrapper) {
+	protected String createFullyQualifiedService(RequestDto requestWrapper) {
 		String service = requestWrapper.getService();
 		String resource = requestWrapper.getResourceOnly();
 		if (resource != null) {
@@ -89,7 +88,7 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 		return result;
 	}
 
-	protected Map<String, String> convertQueryStringToMap(RequestWrapperDto requestWrapper) {
+	protected Map<String, String> convertQueryStringToMap(RequestDto requestWrapper) {
 		Map<String, String> mapQueryParams = null;
 		String resource = requestWrapper.getResource();
 		if (resource != null && resource.contains("?")) {
@@ -148,7 +147,7 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 						mapResponses.put(thirdPartyId, result);
 						processed.add(thirdPartyId);
 					} catch (InterruptedException | ExecutionException e) {
-						LOGGER.warn(ExceptionUtils.getPartialStackTrace(e, 5));
+						LOGGER.warn("", e);
 						if (e instanceof ExecutionException) {
 							processed.add(thirdPartyId);
 							future.cancel(true);

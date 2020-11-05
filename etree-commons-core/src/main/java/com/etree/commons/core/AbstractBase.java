@@ -3,7 +3,7 @@
 *
 * @author  Franklin Joshua
 * @version 1.0
-* @since   2016-01-15 
+* @since   2020-11-04 
 */
 package com.etree.commons.core;
 
@@ -19,7 +19,7 @@ import com.etree.commons.core.CommonsSupportConstants.COLLECTION_TYPE;
 import com.etree.commons.core.dto.Error;
 import com.etree.commons.core.dto.Errors;
 import com.etree.commons.core.dto.MessageDto;
-import com.etree.commons.core.dto.RequestWrapperDto;
+import com.etree.commons.core.dto.RequestDto;
 import com.etree.commons.core.exception.EtreeCommonsException;
 import com.etree.commons.core.utils.CommonUtils;
 import com.etree.commons.core.utils.jackson.json.ObjectMapperContext;
@@ -33,16 +33,16 @@ public abstract class AbstractBase extends AbstractConfigParams implements BaseS
 	private Logger LOGGER = LoggerFactory.getLogger(AbstractBase.class);
 
 	@Override
-	public <T> T process(RequestWrapperDto requestWrapper) {
+	public <T> T fetchData(RequestDto requestWrapper) {
 		throw new EtreeCommonsException("", "Not implemented!");
 	}
 		
-	protected Object convertJsonToPojo(RequestWrapperDto requestWrapper) {
+	protected Object convertJsonToPojo(RequestDto requestWrapper) {
 		Object request = convertJsonToPojo(requestWrapper.getRequest(), requestWrapper.getRequestType(), false);
 		return request;
 	}
 	
-	protected Object convertJsonToPojo(RequestWrapperDto requestWrapper, CommonsSupportConstants.DATE_FORMAT dateFormatter) {
+	protected Object convertJsonToPojo(RequestDto requestWrapper, CommonsSupportConstants.DATE_FORMAT dateFormatter) {
 		Object request = convertJsonToPojo(requestWrapper.getRequest(), requestWrapper.getRequestType(), false, dateFormatter);
 		return request;
 	}

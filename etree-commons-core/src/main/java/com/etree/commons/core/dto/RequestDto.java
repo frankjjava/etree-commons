@@ -3,7 +3,7 @@
  *
  * @author  Franklin Joshua
  * @version 1.0
- * @since   2016-01-15 
+ * @since   2020-11-04 
  */
 package com.etree.commons.core.dto;
 
@@ -12,9 +12,9 @@ import java.sql.Timestamp;
 import com.etree.commons.core.CommonsSupportConstants;
 import com.etree.commons.core.web.dto.UserDetailsDto;
 
-public class RequestWrapperDto implements Cloneable { 
+public class RequestDto implements Cloneable { 
 
-	public static final String REQUEST_WRAPPER_DTO = "RequestWrapperDto";
+	public static final String REQUEST_WRAPPER_DTO = "RequestDto";
 	public static final String THIRDPARTY_ID = "ThirdpartyId";
 	public static final String RESOURCE = "Resource";
 	public static final String ACTION_TYPE = "ActionType";
@@ -178,8 +178,8 @@ public class RequestWrapperDto implements Cloneable {
 	}
 	
 	@Override
-	public RequestWrapperDto clone() {
-		RequestWrapperDto requestWrapperDto = new RequestWrapperDto();
+	public RequestDto clone() {
+		RequestDto requestWrapperDto = new RequestDto();
 		requestWrapperDto.setTransactionId(transactionId);
 		requestWrapperDto.setActionType(actionType);
 		requestWrapperDto.setContentType(contentType);

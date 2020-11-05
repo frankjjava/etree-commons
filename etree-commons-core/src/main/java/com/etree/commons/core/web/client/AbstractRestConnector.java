@@ -3,7 +3,7 @@
 *
 * @author  Franklin Joshua
 * @version 1.0
-* @since   2016-01-15 
+* @since   2020-11-04 
 */
 package com.etree.commons.core.web.client;
 
@@ -32,10 +32,9 @@ import com.etree.commons.core.AbstractBaseService;
 import com.etree.commons.core.CommonsSupportConstants;
 import com.etree.commons.core.dto.Errors;
 import com.etree.commons.core.dto.MessageDto;
-import com.etree.commons.core.dto.RequestWrapperDto;
+import com.etree.commons.core.dto.RequestDto;
 import com.etree.commons.core.exception.EtreeCommonsException;
 import com.etree.commons.core.utils.CommonUtils;
-import com.etree.commons.core.utils.ExceptionUtils;
 import com.etree.commons.core.utils.jackson.json.ObjectMapperContext;
 import com.etree.commons.core.utils.jackson.json.ObjectMapperPrototype;
 import com.etree.commons.core.utils.jackson.json.ObjectMapperProvider;
@@ -54,20 +53,20 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 	private ObjectMapper objectMapper;
 	
 	@Override
-	public <T> T process(RequestWrapperDto requestWrapper) {
+	public <T> T fetchData(RequestDto requestWrapper) {
 		throw new EtreeCommonsException("", "Not implemented!");
 	}	
 
 	@Override
-	public <T> T doRemoteCall(RequestWrapperDto requestWrapper) {
+	public <T> T callRemote(RequestDto requestWrapper) {
 		throw new EtreeCommonsException("", "Not implemented!");		
 	}
 	
-	protected <T> T doRemoteCall(RequestWrapperDto requestWrapper, String urlKey, HttpMethods httpMethod, boolean isForJaxb) {
-		return doRemoteCall(requestWrapper, urlKey, httpMethod, isForJaxb, LOGGER);
+	protected <T> T callRemote(RequestDto requestWrapper, String urlKey, HttpMethods httpMethod, boolean isForJaxb) {
+		return callRemote(requestWrapper, urlKey, httpMethod, isForJaxb, LOGGER);
 	}
 	
-	protected <T> T doRemoteCall(RequestWrapperDto requestWrapper, String urlKey, HttpMethods httpMethod, boolean isForJaxb, Logger logger) {
+	protected <T> T callRemote(RequestDto requestWrapper, String urlKey, HttpMethods httpMethod, boolean isForJaxb, Logger logger) {
 		if (httpMethod == null) {
 			throw new EtreeCommonsException("", "Unsupported HTTP method! 'actionType' cannot be null.");
 		} else if (!HttpMethods.PUT.equals(httpMethod) && !HttpMethods.GET.equals(httpMethod) && !HttpMethods.POST.equals(httpMethod)) {
@@ -109,7 +108,7 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 				}
 			}
 		} catch (Exception ex) {
-			logger.error(ExceptionUtils.getFullStackTrace(ex));
+			logger.error("", ex);
 			return (T) CommonUtils.createMessageDto(ex);
 		}
 		logger.info("Completed microservice call : " + requestWrapper.getService());
@@ -171,7 +170,7 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 		return createBuilderClient(key, false, mediaType);
 	}
 	
-	protected Builder createBuilderClient(RequestWrapperDto requestWrapper, String key) {
+	protected Builder createBuilderClient(RequestDto requestWrapper, String key) {
 		return createBuilderClient(requestWrapper, key, false);
 	}
 	
@@ -191,14 +190,14 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 		return builder;
 	}
 
-	protected Builder createBuilderClient(RequestWrapperDto requestWrapper, URI uri, boolean isSerializeEmptyAlso) {
+	protected Builder createBuilderClient(RequestDto requestWrapper, URI uri, boolean isSerializeEmptyAlso) {
 		Map<String, String> queryParams = convertQueryStringToMap(requestWrapper);
 		WebTarget webTarget = createWebTarget(uri, queryParams, isSerializeEmptyAlso, false);
 		Builder builder = webTarget.request(MediaType.APPLICATION_JSON);
 		return builder;
 	}
 	
-	protected Builder createBuilderClient(RequestWrapperDto requestWrapper, String key, boolean isSerializeEmptyAlso) {
+	protected Builder createBuilderClient(RequestDto requestWrapper, String key, boolean isSerializeEmptyAlso) {
 		WebTarget webTarget = createWebTarget(key, isSerializeEmptyAlso);
 		String resource = requestWrapper.getResource();
 		if (resource != null && resource.contains("?")) {
