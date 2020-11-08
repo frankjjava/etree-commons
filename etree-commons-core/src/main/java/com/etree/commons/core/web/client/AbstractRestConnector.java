@@ -1,7 +1,7 @@
 /**
-* Copyright © 2020 eTree Technologies Pvt. Ltd.
+* Copyright © 2020 elasticTree Technologies Pvt. Ltd.
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
 * @since   2020-11-04 
 */
@@ -29,14 +29,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.etree.commons.core.AbstractBaseService;
-import com.etree.commons.core.CommonsSupportConstants;
 import com.etree.commons.core.dto.Errors;
 import com.etree.commons.core.dto.MessageDto;
 import com.etree.commons.core.dto.RequestDto;
 import com.etree.commons.core.exception.EtreeCommonsException;
 import com.etree.commons.core.utils.CommonUtils;
-import com.etree.commons.core.utils.jackson.json.ObjectMapperContext;
-import com.etree.commons.core.utils.jackson.json.ObjectMapperPrototype;
 import com.etree.commons.core.utils.jackson.json.ObjectMapperProvider;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,41 +50,35 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 	private ObjectMapper objectMapper;
 	
 	@Override
-	public <T> T fetchData(RequestDto requestWrapper) {
-		throw new EtreeCommonsException("", "Not implemented!");
-	}	
-
-	@Override
-	public <T> T callRemote(RequestDto requestWrapper) {
+	public <T> T callRemote(RequestDto requestDto) {
 		throw new EtreeCommonsException("", "Not implemented!");		
 	}
 	
-	protected <T> T callRemote(RequestDto requestWrapper, String urlKey, HttpMethods httpMethod, boolean isForJaxb) {
-		return callRemote(requestWrapper, urlKey, httpMethod, isForJaxb, LOGGER);
+	protected <T> T callRemote(RequestDto requestDto, String urlKey, HttpMethods httpMethod, boolean isForJaxb) {
+		return callRemote(requestDto, urlKey, httpMethod, isForJaxb, LOGGER);
 	}
 	
-	protected <T> T callRemote(RequestDto requestWrapper, String urlKey, HttpMethods httpMethod, boolean isForJaxb, Logger logger) {
+	protected <T> T callRemote(RequestDto requestDto, String urlKey, HttpMethods httpMethod, boolean isForJaxb, Logger logger) {
 		if (httpMethod == null) {
 			throw new EtreeCommonsException("", "Unsupported HTTP method! 'actionType' cannot be null.");
 		} else if (!HttpMethods.PUT.equals(httpMethod) && !HttpMethods.GET.equals(httpMethod) && !HttpMethods.POST.equals(httpMethod)) {
 			throw new EtreeCommonsException("", "Unsupported HTTP method! " + httpMethod.name());
 		}
-		logger.info("Calling microservice : " + requestWrapper.getService());
+		logger.info("Calling microservice : " + requestDto.getService());
 		if (objectMapper == null) {
-			ObjectMapperContext objectMapperContext = new ObjectMapperContext(false, true, CommonsSupportConstants.DATE_FORMAT.YYYY_MM_DDTHH_MM_SS_SSS);
-			objectMapper = ObjectMapperPrototype.createObjectMapper(objectMapperContext);
+			objectMapper = new ObjectMapper();
 		}
 		T objResponse = null;
-		String mediaType = requestWrapper.getContentType();
+		String mediaType = requestDto.getContentType();
 		Builder builder = createBuilderClient(urlKey);
 		Response response = null;
 		try {
 			if (HttpMethods.PUT.equals(httpMethod)) {
-				response = builder.put(Entity.entity(requestWrapper, mediaType));
+				response = builder.put(Entity.entity(requestDto, mediaType));
 			} else if (HttpMethods.GET.equals(httpMethod)) {
 				response = builder.get();
 			} else if (HttpMethods.POST.equals(httpMethod)) {
-				response = builder.post(Entity.entity(requestWrapper, mediaType));
+				response = builder.post(Entity.entity(requestDto, mediaType));
 			}
 			String responseAsString = response.readEntity(String.class);
 			logger.trace("Response received: " + responseAsString);
@@ -102,8 +93,7 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 					try {
 				        objResponse = (T) objectMapperCopy.readValue(responseAsString, MessageDto.class);
 					} catch (IOException ex) {
-						objResponse = (T) convertJsonToPojo(responseAsString, requestWrapper.getResponseType(), false, isForJaxb, 
-								requestWrapper.getCollectionType(), CommonsSupportConstants.DATE_FORMAT.YYYY_MM_DDTHH_MM_SS_SSS);
+						// TODO
 					}
 				}
 			}
@@ -111,7 +101,7 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 			logger.error("", ex);
 			return (T) CommonUtils.createMessageDto(ex);
 		}
-		logger.info("Completed microservice call : " + requestWrapper.getService());
+		logger.info("Completed microservice call : " + requestDto.getService());
 		return objResponse;
 	}
 
@@ -170,8 +160,8 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 		return createBuilderClient(key, false, mediaType);
 	}
 	
-	protected Builder createBuilderClient(RequestDto requestWrapper, String key) {
-		return createBuilderClient(requestWrapper, key, false);
+	protected Builder createBuilderClient(RequestDto requestDto, String key) {
+		return createBuilderClient(requestDto, key, false);
 	}
 	
 	protected Builder createBuilderClient(String key, boolean isSerializeEmptyAlso) {
@@ -190,16 +180,16 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 		return builder;
 	}
 
-	protected Builder createBuilderClient(RequestDto requestWrapper, URI uri, boolean isSerializeEmptyAlso) {
-		Map<String, String> queryParams = convertQueryStringToMap(requestWrapper);
+	protected Builder createBuilderClient(RequestDto requestDto, URI uri, boolean isSerializeEmptyAlso) {
+		Map<String, String> queryParams = convertQueryStringToMap(requestDto);
 		WebTarget webTarget = createWebTarget(uri, queryParams, isSerializeEmptyAlso, false);
 		Builder builder = webTarget.request(MediaType.APPLICATION_JSON);
 		return builder;
 	}
 	
-	protected Builder createBuilderClient(RequestDto requestWrapper, String key, boolean isSerializeEmptyAlso) {
+	protected Builder createBuilderClient(RequestDto requestDto, String key, boolean isSerializeEmptyAlso) {
 		WebTarget webTarget = createWebTarget(key, isSerializeEmptyAlso);
-		String resource = requestWrapper.getResource();
+		String resource = requestDto.getResource();
 		if (resource != null && resource.contains("?")) {
 			resource = resource.substring(resource.indexOf("?") + 1);
 			String[] queryParams = resource.split("&");
@@ -216,12 +206,8 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 		return createWebTarget(key, isSerializeEmptyAlso, true);
 	}
 
-	protected WebTarget createWebTarget(String key, boolean isSerializeEmptyAlso, boolean isForJaxb) { 
-		return createWebTarget(key, isSerializeEmptyAlso, isForJaxb, null);
-	}
-	
 	protected WebTarget createWebTarget(URI uri, Map<String, String> queryParams, boolean isSerializeEmptyAlso, boolean isForJaxb) { 
-		WebTarget webTarget = createWebTarget(uri, isSerializeEmptyAlso, isForJaxb, null);
+		WebTarget webTarget = createWebTarget(uri, isSerializeEmptyAlso, isForJaxb);
 		if (queryParams != null) {
 			for (Entry<String, String> entry : queryParams.entrySet()) {
 				webTarget = webTarget.queryParam(entry.getKey(), entry.getValue());
@@ -230,7 +216,7 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 		return webTarget;
 	}
 	
-	protected WebTarget createWebTarget(String key, boolean isSerializeEmptyAlso, boolean isForJaxb, CommonsSupportConstants.DATE_FORMAT dateFormat) { 
+	protected WebTarget createWebTarget(String key, boolean isSerializeEmptyAlso, boolean isForJaxb) { 
 		if (!configParams.containsKey(key)) {
 			throw new EtreeCommonsException("", "Cannot make remote call! URL is not set.");
 		}
@@ -241,17 +227,13 @@ public abstract class AbstractRestConnector extends AbstractBaseService implemen
 		} catch (URISyntaxException e) {
 			throw new EtreeCommonsException(e);
 		}
-		return createWebTarget(uri, isSerializeEmptyAlso, isForJaxb, dateFormat);
+		return createWebTarget(uri, isSerializeEmptyAlso, isForJaxb);
 	}
 	
 	protected WebTarget createWebTarget(URI uri, boolean isSerializeEmptyAlso, boolean isForJaxb) { 
-		return createWebTarget(uri, isSerializeEmptyAlso, isForJaxb, null);
-	}	
-	
-	protected WebTarget createWebTarget(URI uri, boolean isSerializeEmptyAlso, boolean isForJaxb, CommonsSupportConstants.DATE_FORMAT dateFormat) {
 		if (client == null) {
 			client = ClientBuilder.newBuilder()
-				.register(new ObjectMapperProvider(isSerializeEmptyAlso, isForJaxb, dateFormat))
+				.register(new ObjectMapperProvider(isSerializeEmptyAlso, isForJaxb))
 				.register(JacksonFeature.class)
 				.build();
 		}

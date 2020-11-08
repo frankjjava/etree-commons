@@ -1,7 +1,7 @@
 /**
 * Copyright (c) elastictreetech.com
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
 * @since   2019-01-06 
 */

@@ -1,7 +1,7 @@
 /**
-* Copyright © 2020 eTree Technologies Pvt. Ltd.
+* Copyright © 2020 elasticTree Technologies Pvt. Ltd.
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
 * @since   2020-11-04 
 */
@@ -15,5 +15,5 @@ public interface RemoteConnector {
 	
 //	void registerMe();
 	
-	public <T> T callRemote(RequestDto requestWrapper);
+	public <T> T callRemote(RequestDto requestDto);
 }

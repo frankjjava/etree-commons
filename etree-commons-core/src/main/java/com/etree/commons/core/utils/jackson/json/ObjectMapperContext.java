@@ -1,17 +1,14 @@
 package com.etree.commons.core.utils.jackson.json;
 
-import com.etree.commons.core.CommonsSupportConstants.DATE_FORMAT;
-
+@Deprecated
 public class ObjectMapperContext {
 
 	private boolean isSerializeEmptyAlso; 
 	private boolean isForJaxb; 
-	private DATE_FORMAT dateFormatter;
 	
-	public ObjectMapperContext(boolean isSerializeEmptyAlso, boolean isForJaxb, DATE_FORMAT dateFormatter) {
+	public ObjectMapperContext(boolean isSerializeEmptyAlso, boolean isForJaxb) {
 		this.isSerializeEmptyAlso = isSerializeEmptyAlso;
 		this.isForJaxb = isForJaxb;
-		this.dateFormatter = dateFormatter;
 	}
 	public boolean isSerializeEmptyAlso() {
 		return isSerializeEmptyAlso;
@@ -19,16 +16,12 @@ public class ObjectMapperContext {
 	public boolean isForJaxb() {
 		return isForJaxb;
 	}
-	public DATE_FORMAT getDateFormatter() {
-		return dateFormatter;
-	}
 
 	@Override
 	public boolean equals(Object obj) {
 		ObjectMapperContext newObjectMapperContext = (ObjectMapperContext) obj;
 		if (newObjectMapperContext.isSerializeEmptyAlso == this.isSerializeEmptyAlso
-				&& newObjectMapperContext.isForJaxb == this.isForJaxb 
-				&& newObjectMapperContext.dateFormatter == this.dateFormatter) {
+				&& newObjectMapperContext.isForJaxb == this.isForJaxb) {
 			return true;
 		}
 		return false;
@@ -39,9 +32,6 @@ public class ObjectMapperContext {
 		int hash = 7;
 		hash += 31 * (hash + (isSerializeEmptyAlso ? 0 : 1));
 		hash += 31 * (hash + (isForJaxb() ? 0 : 1));
-		if (dateFormatter != null) {
-			hash += dateFormatter.hashCode();
-		}
 		return hash;
 	}	
 }

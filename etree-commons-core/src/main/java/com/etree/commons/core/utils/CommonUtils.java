@@ -1,7 +1,7 @@
 /**
-* Copyright © 2020 eTree Technologies Pvt. Ltd.
+* Copyright © 2020 elasticTree Technologies Pvt. Ltd.
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
 * @since   2020-11-04 
 */
@@ -43,7 +43,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.SystemPropertyUtils;
 
 import com.etree.commons.core.CommonsSupportConstants;
-import com.etree.commons.core.dto.Error;
 import com.etree.commons.core.dto.Errors;
 import com.etree.commons.core.dto.MessageDto;
 import com.etree.commons.core.exception.EtreeCommonsException;
@@ -355,11 +354,9 @@ public class CommonUtils {
 
 	public static Errors createErrors(String errCode, String errMsg) {
 		Errors errors = new Errors();
-		List<Error> lstError = errors.getError();
-		Error error = new Error();
+		List<com.etree.commons.core.dto.Errors.Error> lstError = errors.getError();
+		com.etree.commons.core.dto.Errors.Error error = new com.etree.commons.core.dto.Errors.Error();
 		lstError.add(error);
-		error.setShortText(errMsg);
-		error.setCode(errCode);
 		return errors;
 	}
 

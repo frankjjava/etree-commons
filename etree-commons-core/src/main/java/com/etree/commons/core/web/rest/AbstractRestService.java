@@ -1,7 +1,7 @@
 /**
-* Copyright © 2020 eTree Technologies Pvt. Ltd.
+* Copyright © 2020 elasticTree Technologies Pvt. Ltd.
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
 * @since   2020-11-04 
 */
@@ -27,72 +27,72 @@ public abstract class AbstractRestService extends AbstractBaseService implements
 
 	private Logger LOGGER = LoggerFactory.getLogger(AbstractRestService.class);
 
-	protected <T> T callService(BaseService baseService, RequestDto requestWrapper, Logger logger) {
-		return callService(baseService, requestWrapper, logger, false);
+	protected <T> T callService(BaseService baseService, RequestDto requestDto, Logger logger) {
+		return callService(baseService, requestDto, logger, false);
 	}
 	
-	protected <T> T callService(BaseService baseService, RequestDto requestWrapper, Logger logger, boolean bypassSecurity) {
+	protected <T> T callService(BaseService baseService, RequestDto requestDto, Logger logger, boolean bypassSecurity) {
 		if (logger == null) {
 			logger = LOGGER;
 		}
-		logEntryOrExit(requestWrapper, logger, true);
+		logEntryOrExit(requestDto, logger, true);
 		Object response = null;
 		try {
 			if (!bypassSecurity) {
-				boolean hasRole = isUserAuthorized(requestWrapper);
+				boolean hasRole = isUserAuthorized(requestDto);
 			}
-			if (HttpMethod.POST.equalsIgnoreCase(requestWrapper.getActionType())) {
-				Object request = requestWrapper.getRequest();
+			if (HttpMethod.POST.equalsIgnoreCase(requestDto.getActionType())) {
+				Object request = requestDto.getRequest();
 				if (request == null) {
-					Class<?> requestType = requestWrapper.getRequestType();
+					Class<?> requestType = requestDto.getRequestType();
 					String msg = "Invalid request type! Expected '" + requestType.getName() + "' but received null.";
 					logger.error(msg);
 					throw new EtreeCommonsException("", msg); 
 				} 
 				if (request instanceof String || request instanceof LinkedHashMap) {
-					request = convertJsonToPojo(requestWrapper);
-					requestWrapper.setRequest(request);
+					request = convertJsonToPojo(requestDto);
+					requestDto.setRequest(request);
 				}
 			}
-			response = baseService.fetchData(requestWrapper);
+			response = baseService.fetchData(requestDto);
 		} catch (Exception	ex) {
 			logger.error(ExceptionUtils.getFullStackTrace(ex));
 			response = CommonUtils.createMessageDto(ex); 
 		}
-		logEntryOrExit(requestWrapper, logger, false);
+		logEntryOrExit(requestDto, logger, false);
 		return (T) response;
 	}
 	
-	protected void logEntryOrExit(RequestDto requestWrapperDto, Logger logger, boolean isEntry) {
-		String serviceId = requestWrapperDto.getService();
-		String resource = requestWrapperDto.getResource();
+	protected void logEntryOrExit(RequestDto requestDto, Logger logger, boolean isEntry) {
+		String serviceId = requestDto.getService();
+		String resource = requestDto.getResource();
 		if (resource != null) {
 			serviceId.concat(".").concat(resource);
 		}
-		String host = requestWrapperDto.getRemoteHost();
+		String host = requestDto.getRemoteHost();
 		if (logger == null) {
 			logger = LOGGER;
 		}
 		if (isEntry) {
 			logger.info(new StringBuilder("Received '").append(serviceId).append("' request from ").append(host)
-					.append(". TxId=").append(requestWrapperDto.getTransactionId()).toString());
+					.append(". TxId=").append(requestDto.getTransactionId()).toString());
 		} else {
 			logger.info(new StringBuilder("Sending '").append(serviceId).append("' response to ").append(host)
-					.append(". TxId=").append(requestWrapperDto.getTransactionId()).toString());
+					.append(". TxId=").append(requestDto.getTransactionId()).toString());
 		}
 	}
 
-	protected void init(HttpServletRequest httpRequest, RequestDto requestWrapperDto) {
-		if (requestWrapperDto.getActionType() == null) {
+	protected void init(HttpServletRequest httpRequest, RequestDto requestDto) {
+		if (requestDto.getActionType() == null) {
 			String actionType = httpRequest.getHeader(RequestDto.ACTION_TYPE);
 			if (actionType == null) {
 				actionType = httpRequest.getMethod();
 			}
-			requestWrapperDto.setActionType(actionType);
+			requestDto.setActionType(actionType);
 		}		
-		if (requestWrapperDto.getTransactionId() == null) {
+		if (requestDto.getTransactionId() == null) {
 			String txId = TxIdUtil.createUidTokenWithMillis(20);
-			requestWrapperDto.setTransactionId(txId);
+			requestDto.setTransactionId(txId);
 		}
 	}
 }

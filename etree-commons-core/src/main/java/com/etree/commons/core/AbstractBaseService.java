@@ -1,7 +1,7 @@
 /**
-* Copyright © 2020 eTree Technologies Pvt. Ltd.
+* Copyright © 2020 elasticTree Technologies Pvt. Ltd.
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
 * @since   2020-11-04 
 */
@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.etree.commons.core.CommonsSupportConstants.COLLECTION_TYPE;
+import com.etree.commons.core.dto.IdentityDto;
 import com.etree.commons.core.dto.RequestDto;
 import com.etree.commons.core.exception.EtreeCommonsException;
 
@@ -42,22 +42,22 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 		this.threadPoolExecutor = threadPoolExecutor;
 	}
 
-	protected <T> T  process(BaseService baseService, Object request, RequestDto requestWrapperDto) {
-		requestWrapperDto.setRequest(request);
-		return baseService.fetchData(requestWrapperDto);
+	protected <T> T  process(BaseService baseService, Object request, RequestDto requestDto) {
+		requestDto.setRequest(request);
+		return baseService.fetchData(requestDto);
 	}
 			
-	protected boolean isUserAuthorized(RequestDto requestWrapper) {
+	protected boolean isUserAuthorized(RequestDto requestDto) {
 		//TODO - remove / comment below if (true) ... block before deploying to prod 
 //		if (true) {
 //			return true;
 //		}
-		UserDetails userDetails = requestWrapper.getUserDetails();
-		if (userDetails == null) {
+		IdentityDto identityDto = requestDto.getIdentityDto();
+		if (identityDto == null) {
 			throw new AccessDeniedException("Access Denied! User not authenticated!");
 		}
-		String serviceAndResource = createFullyQualifiedService(requestWrapper);
-		Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) userDetails.getAuthorities();
+		String serviceAndResource = createFullyQualifiedService(requestDto);
+		Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) identityDto.getAuthorities();
 		boolean hasRole = false;
 		for (GrantedAuthority authority : authorities) {
 			if (serviceAndResource.equalsIgnoreCase(authority.getAuthority())) {
@@ -66,31 +66,24 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 			}
 		}
 		if (!hasRole) {
-			throw new AccessDeniedException(new StringBuilder("Access Denied! ").append(userDetails.getUsername())
+			throw new AccessDeniedException(new StringBuilder("Access Denied! ").append(identityDto.getUserFullName())
 				.append(" is not authorized to call service: ").append(serviceAndResource).toString());
 		}
 		return hasRole;
 	}
 	
-	protected String createFullyQualifiedService(RequestDto requestWrapper) {
-		String service = requestWrapper.getService();
-		String resource = requestWrapper.getResourceOnly();
+	protected String createFullyQualifiedService(RequestDto requestDto) {
+		String service = requestDto.getService();
+		String resource = requestDto.getResourceOnly();
 		if (resource != null) {
 			service = new StringBuilder(service).append(".").append(resource).toString();
 		}
 		return service;
 	}
-		
-	protected Object convertToPojo(Object value, Class<?> type, boolean isSerializeEmptyAlso, boolean isForJaxb, 
-			COLLECTION_TYPE collectionType, CommonsSupportConstants.DATE_FORMAT dateFormatter) {
 
-		Object result = super.convertToPojo(value, type, isSerializeEmptyAlso, isForJaxb, collectionType, dateFormatter);
-		return result;
-	}
-
-	protected Map<String, String> convertQueryStringToMap(RequestDto requestWrapper) {
+	protected Map<String, String> convertQueryStringToMap(RequestDto requestDto) {
 		Map<String, String> mapQueryParams = null;
-		String resource = requestWrapper.getResource();
+		String resource = requestDto.getResource();
 		if (resource != null && resource.contains("?")) {
 			mapQueryParams = new HashMap<>();
 			resource = resource.substring(resource.indexOf("?") + 1);
@@ -165,7 +158,7 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 //						String msg = new StringBuilder("Timedout! Cancelled Task of '").append(thirdPartyId).append("'")
 //								.toString();
 //						LOGGER.error(msg);
-//						Object result = NdcUtilFacade.buildResponseWithError(requestWrapper, msg);
+//						Object result = NdcUtilFacade.buildResponseWithError(requestDto, msg);
 //						lstResponses.add(result);
 //					} else {
 //						isStillRunning = true; 

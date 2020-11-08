@@ -1,7 +1,7 @@
 /**
-* Copyright © 2020 eTree Technologies Pvt. Ltd.
+* Copyright © 2020 elasticTree Technologies Pvt. Ltd.
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
 * @since   2020-11-04 
 */
@@ -14,9 +14,7 @@ public interface BaseService {
 	double NANOS_IN_ONE_MILLI = 1000000;
 
 	String SERVICE = "Service";
-	
-	String SERVICE_SWITCH_OFFICE = "SwitchOffice";
-	
+		
 	String SERVICE_IDENTITY_USEREXISTS		= "Identity.userExists";
 	String SERVICE_IDENTITY_PASSWORD		= "Identity.password";
 	String SERVICE_IDENTITY_USERDETAILS		= "Identity.userDetails";
@@ -27,5 +25,5 @@ public interface BaseService {
 	String SERVICE_CONFIGURATOR				= "Configurator";
 	String SERVICE_IDENTITY				= "Identity";
 	
-	<T> T fetchData(RequestDto requestWrapper);
+	<T> T fetchData(RequestDto requestDto);
 }

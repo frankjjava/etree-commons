@@ -1,18 +1,19 @@
 package com.etree.commons.core.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Data;
 
+@Data
 public class Errors {
 
     protected List<Error> error;
 
-    public List<Error> getError() {
-        if (error == null) {
-            error = new ArrayList<Error>();
-        }
-        return this.error;
-    }
+    @Data
+    public static class Error {
 
+    	private String errCode;
+    	private String errMessage;
+
+    }
 }
