@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.etree.commons.core.CommonsSupportConstants.COLLECTION_TYPE;
-import com.etree.commons.core.dto.RequestDto;
+import com.etree.commons.core.dto.EtreeRequestContext;
 import com.etree.commons.core.exception.EtreeCommonsException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,11 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class AbstractBase extends AbstractConfigParams implements BaseService {
 
 	@Override
-	public <T> T fetchData(RequestDto requestDto) {
+	public <T> T fetchData(EtreeRequestContext requestDto) {
 		throw new EtreeCommonsException("", "Not implemented!");
 	}
 		
-	protected Object convertJsonToPojo(RequestDto requestDto) {
+	protected Object convertJsonToPojo(EtreeRequestContext requestDto) {
 		Object request = convertJsonToPojo(requestDto.getRequest(), requestDto.getRequestType(), requestDto.getCollectionType());
 		return request;
 	}

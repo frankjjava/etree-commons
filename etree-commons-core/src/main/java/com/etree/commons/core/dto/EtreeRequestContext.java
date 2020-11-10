@@ -14,7 +14,7 @@ import com.etree.commons.core.CommonsSupportConstants;
 import lombok.Data;
 
 @Data
-public class RequestDto implements Cloneable { 
+public class EtreeRequestContext implements Cloneable { 
 
 	public static final String ACTION_TYPE = "ActionType";
 
@@ -26,6 +26,7 @@ public class RequestDto implements Cloneable {
 	public static final String STATUS = "approve";
 		
 	private String transactionId;
+	private String sessionId;
 	private String remoteAddr;
 	private String remoteHost;
 	private int remotePort;
@@ -47,8 +48,8 @@ public class RequestDto implements Cloneable {
 	private IdentityDto identityDto;
 	
 	@Override
-	public RequestDto clone() {
-		RequestDto requestDto = new RequestDto();
+	public EtreeRequestContext clone() {
+		EtreeRequestContext requestDto = new EtreeRequestContext();
 		requestDto.setTransactionId(transactionId);
 		requestDto.setActionType(actionType);
 		requestDto.setContentType(contentType);

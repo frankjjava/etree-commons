@@ -25,7 +25,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.etree.commons.core.dto.IdentityDto;
-import com.etree.commons.core.dto.RequestDto;
+import com.etree.commons.core.dto.EtreeRequestContext;
 import com.etree.commons.core.exception.EtreeCommonsException;
 
 
@@ -42,12 +42,12 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 		this.threadPoolExecutor = threadPoolExecutor;
 	}
 
-	protected <T> T  process(BaseService baseService, Object request, RequestDto requestDto) {
+	protected <T> T  process(BaseService baseService, Object request, EtreeRequestContext requestDto) {
 		requestDto.setRequest(request);
 		return baseService.fetchData(requestDto);
 	}
 			
-	protected boolean isUserAuthorized(RequestDto requestDto) {
+	protected boolean isUserAuthorized(EtreeRequestContext requestDto) {
 		//TODO - remove / comment below if (true) ... block before deploying to prod 
 //		if (true) {
 //			return true;
@@ -72,7 +72,7 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 		return hasRole;
 	}
 	
-	protected String createFullyQualifiedService(RequestDto requestDto) {
+	protected String createFullyQualifiedService(EtreeRequestContext requestDto) {
 		String service = requestDto.getService();
 		String resource = requestDto.getResourceOnly();
 		if (resource != null) {
@@ -81,7 +81,7 @@ public abstract class AbstractBaseService extends AbstractBase implements BaseSe
 		return service;
 	}
 
-	protected Map<String, String> convertQueryStringToMap(RequestDto requestDto) {
+	protected Map<String, String> convertQueryStringToMap(EtreeRequestContext requestDto) {
 		Map<String, String> mapQueryParams = null;
 		String resource = requestDto.getResource();
 		if (resource != null && resource.contains("?")) {

@@ -7,7 +7,7 @@
 */
 package com.etree.commons.core;
 
-import com.etree.commons.core.dto.RequestDto;
+import com.etree.commons.core.dto.EtreeRequestContext;
 
 public interface BaseService {
 
@@ -25,5 +25,5 @@ public interface BaseService {
 	String SERVICE_CONFIGURATOR				= "Configurator";
 	String SERVICE_IDENTITY				= "Identity";
 	
-	<T> T fetchData(RequestDto requestDto);
+	<T> T fetchData(EtreeRequestContext requestDto);
 }

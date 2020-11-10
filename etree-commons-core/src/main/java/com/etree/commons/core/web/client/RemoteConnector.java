@@ -7,7 +7,7 @@
 */
 package com.etree.commons.core.web.client;
 
-import com.etree.commons.core.dto.RequestDto;
+import com.etree.commons.core.dto.EtreeRequestContext;
 
 public interface RemoteConnector {
 	
@@ -15,5 +15,5 @@ public interface RemoteConnector {
 	
 //	void registerMe();
 	
-	public <T> T callRemote(RequestDto requestDto);
+	public <T> T callRemote(EtreeRequestContext requestDto);
 }

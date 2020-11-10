@@ -1,10 +1,10 @@
 package com.etree.commons.core.utils;
 
-import com.etree.commons.core.dto.RequestDto;
+import com.etree.commons.core.dto.EtreeRequestContext;
 
 public class RequestWrapperUtil {
 
-	public static String getResourceOnly(RequestDto requestDto) {
+	public static String getResourceOnly(EtreeRequestContext requestDto) {
 		return getResourceWithoutQueryString(requestDto.getResource());
 	}
 	
@@ -25,7 +25,7 @@ public class RequestWrapperUtil {
 		return resource;
 	}
 	
-	public static String getQueryString(RequestDto requestDto) {
+	public static String getQueryString(EtreeRequestContext requestDto) {
 		String resource = requestDto.getResource();
 		if (resource == null) {
 			return null;

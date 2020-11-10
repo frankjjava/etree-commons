@@ -8,7 +8,7 @@
 		<artifactId>etree-commons</artifactId>
 		<version>1.0</version>
 	</parent>
-	<artifactId>etree-commons-genericdao</artifactId>
+	<artifactId>etree-commons-dao</artifactId>
 	
 	<dependencies>
 		<dependency>

@@ -1,9 +1,9 @@
 /**
-* Copyright © 2020 Franklinton IT Pvt. Ltd.
+* Copyright © 2020 ElasticTree Technologies Pvt. Ltd.
 *
-* @author  Franklin Joshua
+* @author  Franklin Abel
 * @version 1.0
-* @since   2016-01-15 
+* @since   2020-11-10 
 */
 package com.etree.commons.core.utils.jackson.json;
 

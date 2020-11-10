@@ -37,6 +37,8 @@ public abstract class AbstractConfigLoader {
 	protected abstract String getDbmsUser();
 	protected abstract String getDbmsPwd();
 	
+	private Properties props;
+			
 	@Bean
 	public BasicDataSource createBasicDataSource() {
 		BasicDataSource basicDataSource = new BasicDataSource();
@@ -70,11 +72,13 @@ public abstract class AbstractConfigLoader {
         return configProps;
 	}
 	
-	public static String getConfigValue(String serviceId, String key) {
+	public String getConfigValue(String serviceId, String key) {
 		// Loading inside the method is done deliberately in order to ensure the loaded properties which has 
 		// sensitive information does not stay in the memory and becomes eligible for garbage collection instantly.
-		Properties props = AbstractConfigLoader.load(serviceId);
-		if (props.containsKey(key)) {
+		if (props == null) {
+			props = AbstractConfigLoader.load(serviceId);
+		}
+		if (props != null && props.containsKey(key)) {
 			return props.getProperty(key);
 		}
 		return null;

@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.etree.commons.core.AbstractBaseService;
 import com.etree.commons.core.BaseService;
-import com.etree.commons.core.dto.RequestDto;
+import com.etree.commons.core.dto.EtreeRequestContext;
 import com.etree.commons.core.exception.EtreeCommonsException;
 import com.etree.commons.core.utils.CommonUtils;
 import com.etree.commons.core.utils.TxIdUtil;
@@ -27,11 +27,11 @@ public abstract class AbstractRestService extends AbstractBaseService implements
 
 	private Logger LOGGER = LoggerFactory.getLogger(AbstractRestService.class);
 
-	protected <T> T callService(BaseService baseService, RequestDto requestDto, Logger logger) {
+	protected <T> T callService(BaseService baseService, EtreeRequestContext requestDto, Logger logger) {
 		return callService(baseService, requestDto, logger, false);
 	}
 	
-	protected <T> T callService(BaseService baseService, RequestDto requestDto, Logger logger, boolean bypassSecurity) {
+	protected <T> T callService(BaseService baseService, EtreeRequestContext requestDto, Logger logger, boolean bypassSecurity) {
 		if (logger == null) {
 			logger = LOGGER;
 		}
@@ -63,7 +63,7 @@ public abstract class AbstractRestService extends AbstractBaseService implements
 		return (T) response;
 	}
 	
-	protected void logEntryOrExit(RequestDto requestDto, Logger logger, boolean isEntry) {
+	protected void logEntryOrExit(EtreeRequestContext requestDto, Logger logger, boolean isEntry) {
 		String serviceId = requestDto.getService();
 		String resource = requestDto.getResource();
 		if (resource != null) {
@@ -82,9 +82,9 @@ public abstract class AbstractRestService extends AbstractBaseService implements
 		}
 	}
 
-	protected void init(HttpServletRequest httpRequest, RequestDto requestDto) {
+	protected void init(HttpServletRequest httpRequest, EtreeRequestContext requestDto) {
 		if (requestDto.getActionType() == null) {
-			String actionType = httpRequest.getHeader(RequestDto.ACTION_TYPE);
+			String actionType = httpRequest.getHeader(EtreeRequestContext.ACTION_TYPE);
 			if (actionType == null) {
 				actionType = httpRequest.getMethod();
 			}
