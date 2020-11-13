@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.HttpMethod;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public abstract class AbstractRestService extends AbstractBaseService implements
 			}
 			response = baseService.fetchData(requestDto);
 		} catch (Exception	ex) {
-			logger.error(ExceptionUtils.getFullStackTrace(ex));
+			logger.error(ExceptionUtils.getStackTrace(ex));
 			response = CommonUtils.createMessageDto(ex); 
 		}
 		logEntryOrExit(requestDto, logger, false);

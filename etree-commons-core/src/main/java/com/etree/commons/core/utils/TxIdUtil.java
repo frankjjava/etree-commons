@@ -3,7 +3,7 @@ package com.etree.commons.core.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import com.etree.commons.core.exception.EtreeCommonsException;
 

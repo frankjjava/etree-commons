@@ -24,8 +24,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.etree.commons.core.dto.IdentityDto;
 import com.etree.commons.core.dto.EtreeRequestContext;
+import com.etree.commons.core.dto.IdentityDto;
 import com.etree.commons.core.exception.EtreeCommonsException;
 
 

@@ -10,7 +10,7 @@ package com.etree.commons.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.configuration.PropertyConverter;
+import com.etree.commons.core.utils.PropertyConverterUtil;
 
 public abstract class AbstractConfigParams implements ConfigParams {
 
@@ -58,7 +58,7 @@ public abstract class AbstractConfigParams implements ConfigParams {
 		Object value = getObject(key);
 		Integer integer = null; 
 		if (value != null) {
-			integer = PropertyConverter.toInteger(value);
+			integer = PropertyConverterUtil.toInteger(value);
 		}
 		return integer;
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractConfigParams implements ConfigParams {
 		Object value = getObject(key);
 		Boolean bool = null; 
 		if (value != null) {
-			bool = PropertyConverter.toBoolean(value);
+			bool = PropertyConverterUtil.toBoolean(value);
 		}
 		return bool;
 	}
@@ -78,7 +78,7 @@ public abstract class AbstractConfigParams implements ConfigParams {
 		Object value = getObject(key);
 		Float fltValue = null; 
 		if (value != null) {
-			fltValue = PropertyConverter.toFloat(value);
+			fltValue = PropertyConverterUtil.toFloat(value);
 		}
 		return fltValue;
 	}

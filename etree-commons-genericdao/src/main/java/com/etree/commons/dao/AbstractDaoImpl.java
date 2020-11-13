@@ -19,8 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -41,6 +44,8 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 
 	private Logger LOGGER = LoggerFactory.getLogger(AbstractDaoImpl.class);
 
+	@Autowired
+    private DataSource dataSource;
 	protected JdbcTemplate jdbcTemplate;
 	protected NamedParameterJdbcTemplate namedJdbcTemplate;
 
@@ -68,6 +73,11 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 		simpleTypes.add(java.sql.Timestamp.class);
 	}
 	
+//	public void setDataSource(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//        this.jdbcTemplate = new JdbcTemplate(dataSource);
+//	}
+	
 	@Override
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -94,7 +104,7 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 		StringBuilder sql = null;
 		for (ColumnMetaDataDto columnMetaDataDto : tableMetaDataDto.getColumns()) {
 			if (sql == null) {
-				sql = new StringBuilder(CREATE_TABLE).append(tableMetaDataDto.getTableName());
+				sql = new StringBuilder("CREATE TABLE").append(tableMetaDataDto.getTableName());
 			} else {
 				sql.append(",");
 			}

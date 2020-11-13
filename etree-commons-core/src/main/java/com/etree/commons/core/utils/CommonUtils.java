@@ -28,7 +28,7 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
