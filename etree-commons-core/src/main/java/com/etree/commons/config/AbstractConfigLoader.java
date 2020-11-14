@@ -13,10 +13,8 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.etree.commons.core.exception.EtreeCommonsException;
@@ -39,17 +37,17 @@ public abstract class AbstractConfigLoader {
 	
 	private Properties props;
 			
-	@Bean
-	public BasicDataSource createBasicDataSource() {
-		BasicDataSource basicDataSource = new BasicDataSource();
-		basicDataSource.setDriverClassName(getDbmsDriver());
-		String url = "jdbc:%s://%s:%s/%s";
-		url = String.format(url, getDbms(), getDbmsHost(), getDbmsPort(), getDbmsDbname());		
-		basicDataSource.setUrl(url);
-		basicDataSource.setUsername(getDbmsUser());
-		basicDataSource.setPassword(getDbmsPwd());
-		return basicDataSource;
-	}
+//	@Bean
+//	public BasicDataSource createBasicDataSource() {
+//		BasicDataSource basicDataSource = new BasicDataSource();
+//		basicDataSource.setDriverClassName(getDbmsDriver());
+//		String url = "jdbc:%s://%s:%s/%s";
+//		url = String.format(url, getDbms(), getDbmsHost(), getDbmsPort(), getDbmsDbname());		
+//		basicDataSource.setUrl(url);
+//		basicDataSource.setUsername(getDbmsUser());
+//		basicDataSource.setPassword(getDbmsPwd());
+//		return basicDataSource;
+//	}
 
 	public static Properties load(String serviceId) {
 		Map<String, String> sysEnv = System.getenv();

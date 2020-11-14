@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -73,10 +74,11 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 		simpleTypes.add(java.sql.Timestamp.class);
 	}
 	
-//	public void setDataSource(DataSource dataSource) {
-//        this.dataSource = dataSource;
-//        this.jdbcTemplate = new JdbcTemplate(dataSource);
-//	}
+	@PostConstruct
+	public void init() {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		setJdbcTemplate(jdbcTemplate);
+	}
 	
 	@Override
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
