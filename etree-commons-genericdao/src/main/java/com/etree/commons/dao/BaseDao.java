@@ -21,7 +21,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.etree.commons.dao.dto.TableMetaDataDto;
 
 
-public interface BaseDao extends BaseCommonDao {
+public interface BaseDao extends DbCommonDao {
 	
 	public boolean isTableExists(String tableName);
 	
