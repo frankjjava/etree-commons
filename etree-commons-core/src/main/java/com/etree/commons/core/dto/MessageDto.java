@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class MessageDto {
 	
+	private String message;
 	private Boolean success;
 	private Object response;
-	private String message;
 	private Errors errors;
 
 }
