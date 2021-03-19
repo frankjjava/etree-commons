@@ -35,13 +35,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
-import com.etree.commons.core.AbstractConfigParams;
 import com.etree.commons.dao.dto.TableMetaDataDto;
 import com.etree.commons.dao.dto.TableMetaDataDto.ColumnMetaDataDto;
 import com.etree.commons.dao.dto.TableMetaDataDto.ColumnMetaDataDto.CONSTRAINTS;
 import com.etree.commons.dao.exception.DaoException;
 
-public abstract class AbstractDaoImpl extends AbstractConfigParams implements BaseDao {
+public abstract class AbstractDaoImpl implements BaseDao {
 
 	private Logger LOGGER = LoggerFactory.getLogger(AbstractDaoImpl.class);
 
@@ -234,6 +233,10 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 		return jdbcTemplate.update(query, pss);
 	}
 
+	/*
+	 * @Override public int executeUpdate(String query, Object[] params, int[]
+	 * types) { return jdbcTemplate.update(query, params, types); }
+	 */
 	@Override
 	public int executeUpdateForNamedSql(String sql, SqlParameterSource params) {
 		return jdbcTemplate.update(sql, params);
@@ -273,11 +276,6 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 	@Override
 	public <T> Object executeNamedQueryForObj(String sql, Map<String, ?> paramMap, Class<T> requiredType) {
 		return namedJdbcTemplate.queryForObject(sql, paramMap, requiredType);
-	}
-
-	@Override
-	public int executeUpdate(String query, Object[] params, int[] types) {
-		return jdbcTemplate.update(query, params, types);
 	}
 
 	protected StringBuilder buildWhereClause(StringBuilder whereClause, String colName, String value, AND_OR logicalOperator, boolean isUseNamedCriteria) {
@@ -352,7 +350,7 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 		return setClause;
 	}
 
-	protected String buildInClause(List<? extends Object> lstValues) {
+	protected String buildInClause(String[] lstValues) {
 		String csvSqlString = buildCsvSqlString(lstValues);
 		if (csvSqlString == null || csvSqlString.isEmpty()) {
 			return null;
@@ -361,7 +359,7 @@ public abstract class AbstractDaoImpl extends AbstractConfigParams implements Ba
 		return csvSqlString;
 	}
 		
-	protected String buildCsvSqlString(List<? extends Object> lstValues) {
+	protected String buildCsvSqlString(String[] lstValues) {
 		StringBuilder values = null;
 		for (Object value : lstValues) {
 			if (values == null) {

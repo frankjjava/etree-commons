@@ -8,6 +8,4 @@ public class MessageDto {
 	private String message;
 	private Boolean success;
 	private Object response;
-	private Errors errors;
-
 }

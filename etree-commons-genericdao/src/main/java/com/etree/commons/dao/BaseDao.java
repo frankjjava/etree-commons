@@ -211,7 +211,7 @@ public interface BaseDao extends DbCommonDao {
 
 	public abstract <T> Object executeNamedQueryForObj(String sql, Map<String, ?> paramMap, Class<T> requiredType);
 
-	public abstract int executeUpdate(String query, Object[] params, int[] types);
+//	public abstract int executeUpdate(String query, Object[] params, int[] types);
 
 	void setJdbcTemplate(JdbcTemplate jdbcTemplate);
 }
