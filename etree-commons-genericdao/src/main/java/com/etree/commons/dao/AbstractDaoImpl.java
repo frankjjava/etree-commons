@@ -1,10 +1,25 @@
 /**
- * Copyright © 2020 elasticTree Technologies Pvt. Ltd.
- *
- * @author  Franklin Abel
- * @version 1.0
- * @since   2020-11-04 
- */
+* Copyright (c) eTree Technologies
+*
+* @author  Franklin Abel
+* @version 1.0
+* @since   2020-06-08 
+*
+* This file is part of the etree-commons.
+* 
+*  The etree-commons is free library: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The etree-commons is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with etree-commons project.  If not, see <https://www.gnu.org/licenses/>.
+*
+*/
 package com.etree.commons.dao;
 
 import java.lang.reflect.Field;
@@ -18,10 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +47,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
-
 import com.etree.commons.dao.dto.TableMetaDataDto;
 import com.etree.commons.dao.dto.TableMetaDataDto.ColumnMetaDataDto;
 import com.etree.commons.dao.dto.TableMetaDataDto.ColumnMetaDataDto.CONSTRAINTS;
 import com.etree.commons.dao.exception.DaoException;
 
 public abstract class AbstractDaoImpl implements BaseDao {
-
 	private Logger LOGGER = LoggerFactory.getLogger(AbstractDaoImpl.class);
-
 	@Autowired
-    private DataSource dataSource;
+	private DataSource dataSource;
 	protected JdbcTemplate jdbcTemplate;
 	protected NamedParameterJdbcTemplate namedJdbcTemplate;
 
@@ -56,7 +66,6 @@ public abstract class AbstractDaoImpl implements BaseDao {
 	public static final String WHERE = " where ";
 	public static final String IS_NULL = " IS NULL ";
 	public static final String IS_NOT_NULL = " IS NOT NULL ";
-
 	private List<Class<?>> simpleTypes = new ArrayList<>();
 
 	protected AbstractDaoImpl() {
@@ -72,19 +81,19 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		simpleTypes.add(java.sql.Date.class);
 		simpleTypes.add(java.sql.Timestamp.class);
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		setJdbcTemplate(jdbcTemplate);
 	}
-	
+
 	@Override
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
-	
+
 	@Override
 	public boolean isTableExists(String tableName) {
 		try {
@@ -147,7 +156,8 @@ public abstract class AbstractDaoImpl implements BaseDao {
 	}
 
 	@Override
-	public KeyHolder executeInsertAndReturnKeyHolder(String table, Map<String, Object> params, Set<String> generatedKeys) {
+	public KeyHolder executeInsertAndReturnKeyHolder(String table, Map<String, Object> params,
+			Set<String> generatedKeys) {
 		SimpleJdbcInsert jdbcInsert = createSimpleJdbcInsert(null, table, params.keySet(), generatedKeys);
 		KeyHolder keyHolder = jdbcInsert.executeAndReturnKeyHolder(params);
 		return keyHolder;
@@ -189,7 +199,8 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		long startTime = System.nanoTime();
 		String[] arrSql = lstBatchSql.toArray(new String[lstBatchSql.size()]);
 		int[] arrCount = jdbcTemplate.batchUpdate(arrSql);
-		LOGGER.debug("Executed 'executeBatchInsertOrUpdate(..)' in (millis) = " + (System.nanoTime() - startTime) / NANOS_IN_ONE_MILLI);
+		LOGGER.debug("Executed 'executeBatchInsertOrUpdate(..)' in (millis) = "
+				+ (System.nanoTime() - startTime) / NANOS_IN_ONE_MILLI);
 		return arrCount;
 	}
 
@@ -278,17 +289,20 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		return namedJdbcTemplate.queryForObject(sql, paramMap, requiredType);
 	}
 
-	protected StringBuilder buildWhereClause(StringBuilder whereClause, String colName, String value, AND_OR logicalOperator, boolean isUseNamedCriteria) {
+	protected StringBuilder buildWhereClause(StringBuilder whereClause, String colName, String value,
+			AND_OR logicalOperator, boolean isUseNamedCriteria) {
 		return buildWhereClause(whereClause, colName, value, logicalOperator, "=", isUseNamedCriteria);
 	}
 
-	protected StringBuilder buildWhereClause(StringBuilder whereClause, String colName, String value, AND_OR logicalOperator, String relationalOperator, 
-			boolean isUseNamedCriteria) {
-		return buildWhereClause(whereClause, colName, value, logicalOperator, relationalOperator, isUseNamedCriteria, null);
+	protected StringBuilder buildWhereClause(StringBuilder whereClause, String colName, String value,
+			AND_OR logicalOperator, String relationalOperator, boolean isUseNamedCriteria) {
+		return buildWhereClause(whereClause, colName, value, logicalOperator, relationalOperator, isUseNamedCriteria,
+				null);
 	}
 
-	protected StringBuilder buildWhereClause(StringBuilder whereClause, String colName, String value, AND_OR logicalOperator, String relationalOperator, 
-			boolean isUseNamedCriteria, List<String> ignoreCriteriaFields) {
+	protected StringBuilder buildWhereClause(StringBuilder whereClause, String colName, String value,
+			AND_OR logicalOperator, String relationalOperator, boolean isUseNamedCriteria,
+			List<String> ignoreCriteriaFields) {
 		boolean isIgnoreFieldsContainsIgnoreCase = containsIgnoreCase(ignoreCriteriaFields, colName);
 		if (whereClause == null) {
 			whereClause = new StringBuilder(WHERE);
@@ -313,8 +327,9 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		}
 		return whereClause;
 	}
-	
-	protected StringBuilder buildWhereBetweenClause(StringBuilder whereClause, AND_OR logicalOperator, String columnName, String beginValue, String endValue) {
+
+	protected StringBuilder buildWhereBetweenClause(StringBuilder whereClause, AND_OR logicalOperator,
+			String columnName, String beginValue, String endValue) {
 		if (beginValue == null || endValue == null) {
 			throw new DaoException("", "Invalid Begin-value and / or End-value!");
 		}
@@ -325,10 +340,10 @@ public abstract class AbstractDaoImpl implements BaseDao {
 				whereClause.append(" ").append(logicalOperator.name()).append(" ");
 			}
 		}
-		whereClause.append(columnName).append(" between '").append(beginValue).append("' ")
-			.append(AND_OR.AND).append(" '").append(endValue).append("'");
-        return whereClause;
-    }
+		whereClause.append(columnName).append(" between '").append(beginValue).append("' ").append(AND_OR.AND)
+				.append(" '").append(endValue).append("'");
+		return whereClause;
+	}
 
 	protected StringBuilder buildSetClause(StringBuilder setClause, String colName) {
 		return buildSetClause(setClause, colName, null);
@@ -350,7 +365,7 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		return setClause;
 	}
 
-	protected String buildInClause(String[] lstValues) {
+	protected String buildInClause(List<String> lstValues) {
 		String csvSqlString = buildCsvSqlString(lstValues);
 		if (csvSqlString == null || csvSqlString.isEmpty()) {
 			return null;
@@ -358,8 +373,8 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		csvSqlString = new StringBuilder(" in (").append(csvSqlString).append(")").toString();
 		return csvSqlString;
 	}
-		
-	protected String buildCsvSqlString(String[] lstValues) {
+
+	protected String buildCsvSqlString(List<String> lstValues) {
 		StringBuilder values = null;
 		for (Object value : lstValues) {
 			if (values == null) {
@@ -372,13 +387,6 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		return values.toString();
 	}
 
-	/**
-	 * Creates the simple types params map.
-	 *
-	 * @param obj
-	 *            the obj
-	 * @return the map
-	 */
 	protected Map<String, Object> createSimpleTypesParamsMap(Object obj) {
 		Map<String, Object> paramsMap = null;
 		Class<? extends Object> cls = obj.getClass();
@@ -389,7 +397,7 @@ public abstract class AbstractDaoImpl implements BaseDao {
 			}
 			paramsMap.put(fld.getName(), val);
 		}
-		return paramsMap; 
+		return paramsMap;
 	}
 
 	protected static java.sql.Date getCurrentDate() {
@@ -431,16 +439,7 @@ public abstract class AbstractDaoImpl implements BaseDao {
 			}
 		};
 	}
-	
-	/**
-	 * Retrieve value.
-	 *
-	 * @param fld
-	 *            the fld
-	 * @param obj
-	 *            the obj
-	 * @return the object
-	 */
+
 	private Object retrieveValue(Field fld, Object obj) {
 		Class<?> type = fld.getType();
 		if (!simpleTypes.contains(type)) {
@@ -486,7 +485,8 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		return selectClause.concat(whereClause);
 	}
 
-	private SimpleJdbcInsert createSimpleJdbcInsert(String schema, String table, Set<String> params, Set<String> generatedKeys) {
+	private SimpleJdbcInsert createSimpleJdbcInsert(String schema, String table, Set<String> params,
+			Set<String> generatedKeys) {
 		SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName(table);
 		if (schema != null) {
 			jdbcInsert = jdbcInsert.withSchemaName(schema);
@@ -499,7 +499,8 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		return jdbcInsert;
 	}
 
-	private SimpleJdbcInsert createSimpleJdbcInsert(String schema, String table, Map<String, Object>[] arrParams, Set<String> generatedKeys) {
+	private SimpleJdbcInsert createSimpleJdbcInsert(String schema, String table, Map<String, Object>[] arrParams,
+			Set<String> generatedKeys) {
 		Set<String> columnNames = new HashSet<>();
 		for (Map<String, Object> params : arrParams) {
 			for (String columnName : params.keySet()) {
@@ -511,7 +512,7 @@ public abstract class AbstractDaoImpl implements BaseDao {
 		SimpleJdbcInsert jdbcInsert = createSimpleJdbcInsert(schema, table, columnNames, generatedKeys);
 		return jdbcInsert;
 	}
-	
+
 	private boolean containsIgnoreCase(List<String> values, String searchStr) {
 		if (values == null && searchStr == null) {
 			return true;

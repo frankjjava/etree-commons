@@ -3,21 +3,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-<!-- 
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.3.0.RELEASE</version>
 		<relativePath />
 	</parent>
- -->
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.0.RELEASE</version>
-		<relativePath />
-	</parent>
-	<groupId>com.etree</groupId>
+	<groupId>etree-commons</groupId>
 	<artifactId>etree-commons</artifactId>
 	<version>1.0</version>
 
@@ -27,7 +20,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<etree-commons.version>1.0</etree-commons.version>
 		<commons-configuration.version>1.8</commons-configuration.version>
 	</properties>
 
@@ -47,14 +39,14 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.etree</groupId>
+				<groupId>etree-commons</groupId>
 				<artifactId>etree-commons-core</artifactId>
-				<version>${etree-commons.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.etree</groupId>
+				<groupId>etree-commons</groupId>
 				<artifactId>etree-commons-genericdao</artifactId>
-				<version>${etree-commons.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

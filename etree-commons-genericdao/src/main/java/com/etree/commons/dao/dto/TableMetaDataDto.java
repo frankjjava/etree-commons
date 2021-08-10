@@ -1,17 +1,40 @@
+/**
+* Copyright (c) eTree Technologies
+*
+* @author  Franklin Abel
+* @version 1.0
+* @since   2020-06-08 
+*
+* This file is part of the etree-commons.
+* 
+*  The etree-commons is free library: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, version 3 of the License.
+*
+*  The etree-commons is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  A copy of the GNU General Public License is made available as 'License.md' file, 
+*  along with etree-commons project.  If not, see <https://www.gnu.org/licenses/>.
+*
+*/
 package com.etree.commons.dao.dto;
 
 import java.sql.Types;
 import java.util.Set;
 
 public class TableMetaDataDto {
+	public enum DIALECT {
+		ORACLE, MS_SQL, MYSQL, POSTGRES
+	};
 
-	public enum DIALECT { ORACLE, MS_SQL, MYSQL, POSTGRES };
-	
 	private String databaseName;
 	private String tableName;
 	private Set<ColumnMetaDataDto> columns;
 	private DIALECT dialect;
-	
+
 	public String getDatabaseName() {
 		return databaseName;
 	}
@@ -35,7 +58,7 @@ public class TableMetaDataDto {
 	public void setColumns(Set<ColumnMetaDataDto> columns) {
 		this.columns = columns;
 	}
-	
+
 	public DIALECT getDialect() {
 		return dialect;
 	}
@@ -45,20 +68,16 @@ public class TableMetaDataDto {
 	}
 
 	public static final class ColumnMetaDataDto {
+		public enum CONSTRAINTS {
+			PRIMARY_KEY
+		};
 
-		public enum CONSTRAINTS {PRIMARY_KEY};
 		public enum TYPE {
-			VARCHAR(Types.VARCHAR),
-			BYTE(Types.TINYINT),
-			SHORT(Types.SMALLINT),
-			INT(Types.INTEGER),
-			LONG(Types.BIGINT),
-			FLOAT(Types.REAL),
-			DOUBLE(Types.DOUBLE),
-			DATE(Types.DATE),
-			TIMESTAMP(Types.TIMESTAMP);
-			
+			VARCHAR(Types.VARCHAR), BYTE(Types.TINYINT), SHORT(Types.SMALLINT), INT(Types.INTEGER), LONG(Types.BIGINT),
+			FLOAT(Types.REAL), DOUBLE(Types.DOUBLE), DATE(Types.DATE), TIMESTAMP(Types.TIMESTAMP);
+
 			int value;
+
 			private TYPE(int value) {
 				this.value = value;
 			}
@@ -76,7 +95,7 @@ public class TableMetaDataDto {
 		public void setColumnName(String columnName) {
 			this.columnName = columnName;
 		}
-		
+
 		public void setType(TYPE type) {
 			this.type = type;
 		}
@@ -103,7 +122,7 @@ public class TableMetaDataDto {
 			}
 			return null;
 		}
-		
+
 		public int getLength() {
 			return length;
 		}
@@ -121,4 +140,3 @@ public class TableMetaDataDto {
 		}
 	}
 }
-
