@@ -10,7 +10,7 @@
 		<version>2.3.0.RELEASE</version>
 		<relativePath />
 	</parent>
-	<groupId>etree-commons</groupId>
+	<groupId>etree</groupId>
 	<artifactId>etree-commons</artifactId>
 	<version>1.0</version>
 
